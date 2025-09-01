@@ -38,7 +38,35 @@ O modelo do sistema foi estruturado conforme o diagrama abaixo:
 
 ## ⚙️ Tecnologias Utilizadas
 
--   **Python** (para modelagem e lógica principal)
+-   **Python** (3.10.8)
+
+## Instalação
+
+Clone o repositório com:
+
+```bash
+git clone https://github.com/gustavowkayser/swiss-chess-system.git
+cd swiss-chess-system
+```
+
+Ative o ambiente virtual do Python
+
+```bash
+python -m venv venv
+source venv/bin/activate   # Linux/Mac
+venv\Scripts\activate      # Windows
+```
+
+Instale as dependências
+```bash
+pip install -r requirements.txt
+```
+
+Execute o sistema
+```bash
+python main.py
+```
+
 
 ## 🤝 Contribuição
 
