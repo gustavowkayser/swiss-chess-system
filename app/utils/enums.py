@@ -13,3 +13,9 @@ class ControleTempo(Enum):
     CLASSICO = "Clássico"
     RAPIDO = "Rápido"
     BLITZ = "Blitz"
+
+class TipoDesempate(Enum):
+    CONFRONTO_DIRETO = "Confronto Direto"
+    BUCHHOLZ = "Buchholz"
+    BUCHHOLZ_MEDIO = "Buchholz Médio"
+    SONNENBORN_BERGER = "Sonnenborn-Berger"

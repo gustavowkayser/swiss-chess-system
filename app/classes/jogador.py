@@ -4,7 +4,8 @@ from app.classes import Partida, Participacao, Rating
 from typing import List, Optional
 
 class Jogador:
-    def __init__(self, 
+    def __init__(
+        self, 
         nome: str, 
         federacao: str, 
         data_nascimento: date,

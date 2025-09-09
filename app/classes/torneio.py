@@ -1,6 +1,6 @@
 from datetime import datetime
 from typing import List, Optional
-from app.classes import Jogador, Rodada
+from app.classes import Participacao, Rodada
 from app.utils.enums import ControleTempo
 
 class Torneio:
@@ -9,20 +9,18 @@ class Torneio:
         nome: str, 
         local: str, 
         data: datetime, 
-        organizador: str, 
         controle_tempo: ControleTempo, 
         descricao: Optional[str] = None,
-        jogadores: Optional[List[Jogador]] = None, 
+        jogadores: Optional[List[Participacao]] = None,
         rodadas: Optional[List[Rodada]] = None
     ):
         self.__nome = nome
         self.__local = local
         self.__data = data
-        self.__organizador = organizador
         self.__controle_tempo = controle_tempo
         self.__jogadores = jogadores
-        self.__rodadas = rodadas
         self.__descricao = descricao
+        self.__rodadas = rodadas
 
     @property
     def nome(self):

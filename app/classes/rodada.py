@@ -9,11 +9,13 @@ class Rodada:
         data: datetime,
         torneio: Torneio,
         partidas: Optional[List[Partida]] = None,
+        subrodada: Optional[int] = None
     ):
         self.__numero = numero
         self.__data = data
         self.__partidas = partidas
         self.__torneio = torneio
+        self.__subrodada = subrodada
 
     @property
     def numero(self):
@@ -46,3 +48,11 @@ class Rodada:
     @torneio.setter
     def torneio(self, value):
         self.__torneio = value
+
+    @property
+    def subrodada(self):
+        return self.__subrodada
+    
+    @subrodada.setter
+    def subrodada(self, value):   
+        self.__subrodada = value

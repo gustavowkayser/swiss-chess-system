@@ -1,34 +1,25 @@
-from app.classes import Torneio, Jogador, Partida
+from app.classes import Torneio, Jogador, Partida, Rating, Desempate
 from typing import Optional, List
 
-class Participacao(Jogador):
+class Participacao:
     def __init__(
         self, 
         federacao: str, 
-        rating: float, 
-        rating_acumulado: float, 
+        rating: Rating, 
         jogador: Jogador,
         torneio: Torneio,
         pontos: Optional[float] = None, 
-        desempates: Optional[float] = None,
+        desempates: Optional[List[Desempate]] = None,
         partidas: Optional[List[Partida]] = None
     ):
-        super().__init__(
-            nome=jogador.nome,
-            federacao=jogador.federacao,
-            data_nascimento=jogador.data_nascimento,
-            sexo=jogador.sexo,
-            rating=jogador.rating,
-            partidas=partidas,
-            participacoes=jogador.participacoes
-        )
         self.__federacao = federacao
         self.__rating = rating
-        self.__rating_acumulado = rating_acumulado
         self.__pontos = pontos
         self.__desempates = desempates
         self.__jogador = jogador
         self.__torneio = torneio
+        self.__desempates = desempates
+        self.__partidas = partidas
 
     @property
     def federacao(self):
@@ -85,3 +76,11 @@ class Participacao(Jogador):
     @torneio.setter
     def torneio(self, value):
         self.__torneio = value
+
+    @property
+    def partidas(self):
+        return self.__partidas
+    
+    @partidas.setter
+    def partidas(self, value):
+        self.__partidas = value
