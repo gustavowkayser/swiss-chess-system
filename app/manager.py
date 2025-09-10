@@ -2,12 +2,16 @@ from . import logger
 from .classes import TorneioSuico, TorneioEliminatorio
 from .utils.enums import TipoTorneio, ControleTempo
 from .request import Request
+from .migration_manager import migration_manager
 from datetime import date
 
 class App:
     def __init__(self):
         self.logger = None
         self.functions_map = {
+            "migrate": self.migrate,
+            "migration:create": self.create_migration,
+            "migration:status": self.migration_status,
             "registrar-torneio": self.register_tournament,
         } 
 
@@ -19,6 +23,53 @@ class App:
             self.functions_map[function]()
         else:
             self.logger.error(f"Função '{function}' não reconhecida.", context={"function": function})
+
+    def migrate(self):
+        """Executa todas as migrations pendentes"""
+        self.logger.info("Iniciando processo de migração do banco de dados...")
+        
+        # Define o logger no migration manager
+        migration_manager.set_logger(self.logger)
+        
+        # Executa as migrations
+        success = migration_manager.run_migrations()
+        
+        if success:
+            self.logger.info("Migração concluída com sucesso.")
+        else:
+            self.logger.error("Erro durante a migração do banco de dados.")
+
+    def create_migration(self):
+        """Cria uma nova migration"""
+        self.logger.info("Criando nova migration...")
+        
+        name = self.request.get_input(
+            prompt="Nome da migration: ", 
+            expected_type=str, 
+            min_length=3, 
+            max_length=100)
+        
+        migration_manager.set_logger(self.logger)
+        filename = migration_manager.create_migration(name)
+        
+        self.logger.info(f"Migration criada com sucesso: {filename}")
+        self.logger.info(f"Edite o arquivo em: app/database/migrations/{filename}")
+
+    def migration_status(self):
+        """Mostra o status de todas as migrations"""
+        self.logger.info("Verificando status das migrations...")
+        
+        migration_manager.set_logger(self.logger)
+        status_list = migration_manager.get_migration_status()
+        
+        if not status_list:
+            self.logger.info("Nenhuma migration encontrada.")
+            return
+        
+        self.logger.info("Status das migrations:")
+        for migration in status_list:
+            status = "✓ EXECUTADA" if migration['executed'] else "✗ PENDENTE"
+            self.logger.info(f"  {migration['number']:03d} - {migration['filename']} - {status}")
 
     def register_tournament(self):
         self.logger.info("Registrando torneio...")
