@@ -62,7 +62,7 @@ class MigrationManager:
     
     def _is_migration_executed(self, filename: str) -> bool:
         """Verifica se uma migration já foi executada"""
-        result = db_repository.count("migrations", "filename = ?", (filename,))
+        result = db_repository.count("migrations", f"filename = '{filename}'")
         return result > 0
     
     def _mark_migration_executed(self, filename: str):

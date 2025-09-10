@@ -18,13 +18,10 @@ class DBRepository:
         # Only allow alphanumeric and underscores for table and column names
         if not re.match(r'^\w+$', table_name):
             raise ValueError("Invalid table name")
-        valid_types = {'INTEGER', 'TEXT', 'REAL', 'BLOB', 'NUMERIC'}
         columns = []
         for name, dtype in schema.items():
             if not re.match(r'^\w+$', name):
                 raise ValueError(f"Invalid column name: {name}")
-            if dtype.upper() not in valid_types:
-                raise ValueError(f"Invalid SQL type: {dtype}")
             columns.append(f"{name} {dtype.upper()}")
         columns_str = ', '.join(columns)
         # Validate table name again before executing
