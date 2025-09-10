@@ -1,6 +1,21 @@
-from app.classes.torneio import Torneio
-from app.classes.jogador import Jogador
-from app.classes.partida import Partida
-from app.classes.rodada import Rodada
-from app.classes.rating import Rating
-from app.classes.desempate import Desempate
+from .torneio import Torneio
+from .jogador import Jogador
+from .partida import Partida
+from .rodada import Rodada
+from .rating import Rating
+from .desempate import Desempate
+from .torneio_suico import TorneioSuico
+from .torneio_eliminatorio import TorneioEliminatorio
+from .participacao import Participacao
+
+__all__ = [
+    'Torneio',
+    'Jogador',
+    'Partida',
+    'Rodada',
+    'Rating',
+    'Desempate',
+    'TorneioSuico',
+    'TorneioEliminatorio',
+    'Participacao'
+]

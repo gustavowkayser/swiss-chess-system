@@ -1,9 +1,13 @@
 from datetime import datetime
-from typing import List, Optional
-from app.classes import Participacao, Rodada
+from typing import List, Optional, TYPE_CHECKING
 from app.utils.enums import ControleTempo
+from abc import ABC, abstractmethod
 
-class Torneio:
+if TYPE_CHECKING:
+    from .participacao import Participacao
+    from .rodada import Rodada
+
+class Torneio(ABC):
     def __init__(
         self, 
         nome: str, 
@@ -11,8 +15,8 @@ class Torneio:
         data: datetime, 
         controle_tempo: ControleTempo, 
         descricao: Optional[str] = None,
-        jogadores: Optional[List[Participacao]] = None,
-        rodadas: Optional[List[Rodada]] = None
+        jogadores: Optional[List["Participacao"]] = None,
+        rodadas: Optional[List["Rodada"]] = None
     ):
         self.__nome = nome
         self.__local = local
@@ -85,3 +89,7 @@ class Torneio:
     @descricao.setter
     def descricao(self, value):
         self.__descricao = value
+
+    @abstractmethod
+    def emparceirar(self):
+        raise NotImplementedError("O método emparceirar deve ser implementado nas subclasses.")

@@ -1,14 +1,17 @@
 from datetime import datetime
-from typing import List, Optional
-from app.classes import Partida, Torneio
+from typing import List, Optional, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .partida import Partida
+    from .torneio import Torneio
 
 class Rodada:
     def __init__(
         self,
         numero: int,
         data: datetime,
-        torneio: Torneio,
-        partidas: Optional[List[Partida]] = None,
+        torneio: "Torneio",
+        partidas: Optional[List["Partida"]] = None,
         subrodada: Optional[int] = None
     ):
         self.__numero = numero

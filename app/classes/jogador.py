@@ -1,7 +1,11 @@
 from datetime import date
+from typing import List, Optional, TYPE_CHECKING
 from app.utils.enums import Sexo
-from app.classes import Partida, Participacao, Rating
-from typing import List, Optional
+
+if TYPE_CHECKING:
+    from .partida import Partida
+    from .participacao import Participacao
+    from .rating import Rating
 
 class Jogador:
     def __init__(
@@ -10,9 +14,9 @@ class Jogador:
         federacao: str, 
         data_nascimento: date,
         sexo: Sexo,
-        rating: Rating,
-        partidas: Optional[List[Partida]] = None,
-        participacoes: Optional[List[Participacao]] = None
+        rating: "Rating",
+        partidas: Optional[List["Partida"]] = None,
+        participacoes: Optional[List["Participacao"]] = None
     ):
         self.__nome = nome
         self.__federacao = federacao

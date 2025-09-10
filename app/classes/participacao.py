@@ -1,16 +1,22 @@
-from app.classes import Torneio, Jogador, Partida, Rating, Desempate
-from typing import Optional, List
+from typing import Optional, List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .torneio import Torneio
+    from .jogador import Jogador
+    from .partida import Partida
+    from .rating import Rating
+    from .desempate import Desempate
 
 class Participacao:
     def __init__(
         self, 
         federacao: str, 
-        rating: Rating, 
-        jogador: Jogador,
-        torneio: Torneio,
+        rating: "Rating", 
+        jogador: "Jogador",
+        torneio: "Torneio",
         pontos: Optional[float] = None, 
-        desempates: Optional[List[Desempate]] = None,
-        partidas: Optional[List[Partida]] = None
+        desempates: Optional[List["Desempate"]] = None,
+        partidas: Optional[List["Partida"]] = None
     ):
         self.__federacao = federacao
         self.__rating = rating

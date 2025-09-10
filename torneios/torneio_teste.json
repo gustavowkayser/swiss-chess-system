@@ -1,0 +1,9 @@
+{
+  "tipo": "TorneioSuico",
+  "nome": "Torneio Teste",
+  "local": "Clube de Xadrez",
+  "data": "2024-01-01",
+  "controle_tempo": 1,
+  "descricao": null,
+  "numero_rodadas": 5
+}

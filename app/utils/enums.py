@@ -1,5 +1,9 @@
 from enum import Enum
 
+class TipoTorneio(Enum):
+    SUICO = 1
+    ELIMINATORIO = 2
+
 class Resultado(Enum):
     BRANCAS_VENCEM = "1-0"
     EMPATE = "1/2-1/2"
@@ -10,12 +14,12 @@ class Sexo(Enum):
     FEMININO = "F"
 
 class ControleTempo(Enum):
-    CLASSICO = "Clássico"
-    RAPIDO = "Rápido"
-    BLITZ = "Blitz"
+    CLASSICO = 1
+    RAPIDO = 2
+    BLITZ = 3
 
 class TipoDesempate(Enum):
-    CONFRONTO_DIRETO = "Confronto Direto"
-    BUCHHOLZ = "Buchholz"
-    BUCHHOLZ_MEDIO = "Buchholz Médio"
-    SONNENBORN_BERGER = "Sonnenborn-Berger"
+    CONFRONTO_DIRETO = 1
+    BUCHHOLZ = 2
+    BUCHHOLZ_MEDIO = 3
+    SONNENBORN_BERGER = 4

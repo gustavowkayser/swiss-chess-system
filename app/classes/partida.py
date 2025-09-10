@@ -1,14 +1,18 @@
-from app.classes import Jogador, Rodada
+from typing import TYPE_CHECKING
 from app.utils.enums import Resultado
+
+if TYPE_CHECKING:
+    from .jogador import Jogador
+    from .rodada import Rodada
 
 class Partida:
     def __init__(
         self,
         resultado: Resultado,
         pgn: str,
-        brancas: Jogador,
-        pretas: Jogador,
-        rodada: Rodada,
+        brancas: "Jogador",
+        pretas: "Jogador",
+        rodada: "Rodada",
     ):
         self.__resultado = resultado
         self.__pgn = pgn
