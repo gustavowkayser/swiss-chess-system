@@ -3,7 +3,7 @@ import importlib.util
 import re
 from pathlib import Path
 from typing import List, Tuple
-from .repositories.db_repository import db_repository 
+from .db import db
 
 class MigrationManager:
     """
@@ -32,7 +32,7 @@ class MigrationManager:
     
     def _ensure_migrations_table(self):
         """Cria a tabela de controle de migrations se não existir"""
-        db_repository.create_table('migrations', {
+        db.create_table('migrations', {
             'id': 'INTEGER PRIMARY KEY AUTOINCREMENT',
             'filename': 'TEXT NOT NULL UNIQUE',
             'executed_at': 'TIMESTAMP DEFAULT CURRENT_TIMESTAMP'
@@ -62,12 +62,12 @@ class MigrationManager:
     
     def _is_migration_executed(self, filename: str) -> bool:
         """Verifica se uma migration já foi executada"""
-        result = db_repository.count("migrations", f"filename = '{filename}'")
+        result = db.count("migrations", f"filename = '{filename}'")
         return result > 0
     
     def _mark_migration_executed(self, filename: str):
         """Marca uma migration como executada"""
-        db_repository.insert("migrations", ("filename",), (filename,))
+        db.insert("migrations", ("filename",), (filename,))
     
     def _load_migration_module(self, filename: str):
         """Carrega o módulo da migration"""
@@ -174,9 +174,9 @@ def migrate():
     Implementar a migration aqui.
     Exemplo:
     
-    from app.repositories.db_repository import db_repository
+    from app.db import db
     
-    db_repository.create_table(
+    db.create_table(
         'table_name',
         {{
             'id': 'INTEGER PRIMARY KEY AUTOINCREMENT',

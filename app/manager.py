@@ -4,6 +4,8 @@ from .utils.enums import TipoTorneio, ControleTempo
 from .request import Request
 from .migration_manager import migration_manager
 from datetime import date
+from app.repositories.db_repository import db_repository
+from app.dtos.torneio_dto import TorneioSuicoDTO, TorneioEliminatorioDTO
 
 class App:
     def __init__(self):
@@ -13,10 +15,13 @@ class App:
             "migration:create": self.create_migration,
             "migration:status": self.migration_status,
             "registrar-torneio": self.register_tournament,
+            "registrar-torneio-exemplo": self.register_example_tournament,
+            "listar-torneios": self.get_tournaments,
         } 
 
     def execute(self, function, *args):
         self.logger = logger.Logger(log_level=logger.LogLevel.DEBUG if "--debug" in args else logger.LogLevel.DEFAULT)
+
         self.request = Request(self.logger)
         if function in self.functions_map:
             self.logger.debug(f"Executando a função '{function}' com os seguintes argumentos: {', '.join(str(arg) for arg in args)}")
@@ -115,4 +120,35 @@ class App:
             controle_tempo=controle_tempo
         )
 
+        try:
+            db_repository.add_torneio(TorneioSuicoDTO.to_dict(torneio) if tipo == TipoTorneio.SUICO.value else TorneioEliminatorioDTO.to_dict(torneio))
+        except Exception as e:
+            self.logger.error(f"Erro ao registrar torneio: {e}")
+            return
         self.logger.info(f"Torneio '{torneio.nome}' registrado com sucesso!")
+
+    def register_example_tournament(self):
+        torneio = TorneioSuico(
+            nome="Caioba Chess Open 2025",
+            local="Matinhos PR",
+            data="10/10/2025",
+            numero_rodadas=9,
+            controle_tempo=ControleTempo.CLASSICO.value,
+            descricao="Torneio anual na praia de Caiobá"
+        )
+
+        try:
+            db_repository.add_torneio(TorneioSuicoDTO.to_dict(torneio))
+        except Exception as e:
+            self.logger.error(f"Erro ao registrar torneio: {e}")
+            return
+        self.logger.info(f"Torneio '{torneio.nome}' registrado com sucesso!")
+
+    def get_tournaments(self):
+        self.logger.info("Buscando torneios...")
+        torneios = db_repository.get_torneios()
+        if not torneios:
+            self.logger.info("Nenhum torneio encontrado.")
+            return
+        for torneio in torneios:
+            self.logger.info(f"  ID: {torneio[0]}, Nome: {torneio[1]}, Local: {torneio[2]}, Data: {torneio[3]}, Rodadas: {torneio[4]}, Controle de Tempo: {torneio[5]}")

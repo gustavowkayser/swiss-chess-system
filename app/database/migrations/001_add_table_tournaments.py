@@ -2,11 +2,11 @@
 Migration: Add tournaments table
 Created: Initial migration
 """
-from app.repositories.db_repository import db_repository
+from app.db import db
 
 def migrate():
     """Cria a tabela de torneios"""
-    db_repository.create_table(
+    db.create_table(
         'torneios',
         {
             'id': 'INTEGER PRIMARY KEY AUTOINCREMENT',
