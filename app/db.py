@@ -46,8 +46,6 @@ class DB:
             raise ValueError("Invalid table name")
         columns = []
         for name, dtype in schema.items():
-            if not re.match(r'^\w+$', name):
-                raise ValueError(f"Invalid column name: {name}")
             columns.append(f"{name} {dtype.upper()}")
         columns_str = ', '.join(columns)
         # Validate table name again before executing
@@ -67,7 +65,9 @@ class DB:
         placeholders = ', '.join(['?' for _ in values])
         columns_str = ', '.join([f'"{col}"' for col in columns])
         query = f'INSERT INTO "{table_name}" ({columns_str}) VALUES ({placeholders})'
-        self.execute(query, values)
+        cursor = self.connection.execute(query, values)
+        self.connection.commit()
+        return cursor.lastrowid
 
     def count(self, table_name: str, where_clause: str = "") -> int:
         import re

@@ -1,23 +1,30 @@
 from . import logger
-from .classes import TorneioSuico, TorneioEliminatorio
+from .classes import TorneioSuico, TorneioEliminatorio, Rating, Jogador
 from .utils.enums import TipoTorneio, ControleTempo
 from .request import Request
 from .migration_manager import migration_manager
 from datetime import date
 from app.repositories.db_repository import db_repository
 from app.dtos.torneio_dto import TorneioSuicoDTO, TorneioEliminatorioDTO
+from app.dtos.jogador_dto import JogadorDTO
 
 class App:
     def __init__(self):
         self.logger = None
         self.functions_map = {
+            # Migrations
             "migrate": self.migrate,
             "migration:create": self.create_migration,
             "migration:status": self.migration_status,
-            "registrar-torneio": self.register_tournament,
-            "registrar-torneio-exemplo": self.register_example_tournament,
-            "listar-torneios": self.get_tournaments,
-        } 
+            # Registrar
+            "registrar:torneio": self.register_tournament,
+            "registrar:torneio-exemplo": self.register_example_tournament,
+            # Cadastrar
+            "cadastrar:jogador": self.register_player,
+            # Listar
+            "listar:torneios": self.get_tournaments,
+            "listar:jogadores": self.get_players
+        }
 
     def execute(self, function, *args):
         self.logger = logger.Logger(log_level=logger.LogLevel.DEBUG if "--debug" in args else logger.LogLevel.DEFAULT)
@@ -77,7 +84,6 @@ class App:
             self.logger.info(f"  {migration['number']:03d} - {migration['filename']} - {status}")
 
     def register_tournament(self):
-        self.logger.info("Registrando torneio...")
 
         tipo = self.request.get_input(
             prompt="Torneio Suíço (1) ou Eliminatório (2): ", 
@@ -144,6 +150,58 @@ class App:
             return
         self.logger.info(f"Torneio '{torneio.nome}' registrado com sucesso!")
 
+    def register_player(self):
+        nome = self.request.get_input(
+            prompt="Nome do jogador: ", 
+            expected_type=str, 
+            min_length=2, 
+            max_length=100)
+        federacao = self.request.get_input(
+            prompt="Federação do jogador: ", 
+            expected_type=str, 
+            min_length=2, 
+            max_length=100)
+        data_nascimento = self.request.get_input(
+            prompt="Data de nascimento do jogador (DD/MM/AAAA): ", 
+            expected_type=str, 
+            min_length=10, 
+            max_length=10)
+        sexo = self.request.get_input(
+            prompt="Sexo do jogador (M/F): ", 
+            expected_type=str, 
+            min_length=1, 
+            max_length=1,
+            choices=['M', 'F'])
+        rating_classico = self.request.get_input(
+            prompt="Rating Clássico: ",
+            expected_type=int
+        )
+        rating_rapido = self.request.get_input(
+            prompt="Rating Rápido: ",
+            expected_type=int
+        )
+        rating_blitz = self.request.get_input(
+            prompt="Rating Blitz: ",
+            expected_type=int
+        )
+
+        rating = Rating(rating_classico, rating_rapido, rating_blitz)
+
+        jogador = Jogador(
+            nome=nome,
+            federacao=federacao,
+            data_nascimento=data_nascimento,
+            sexo=sexo,
+            rating=rating
+        )
+
+        try:
+            db_repository.add_player(JogadorDTO.to_dict(jogador))
+        except Exception as e:
+            self.logger.error(f"Erro ao registrar jogador: {e}")
+            return
+        self.logger.info(f"Jogador '{nome}' registrado com sucesso!")
+
     def get_tournaments(self):
         self.logger.info("Buscando torneios...")
         torneios = db_repository.get_torneios()
@@ -152,3 +210,12 @@ class App:
             return
         for torneio in torneios:
             self.logger.info(f"  ID: {torneio[0]}, Nome: {torneio[1]}, Local: {torneio[2]}, Data: {torneio[3]}, Rodadas: {torneio[4]}, Controle de Tempo: {torneio[5]}")
+
+    def get_players(self):
+        self.logger.info("Buscando jogadores...")
+        jogadores = db_repository.get_jogadores()
+        if not jogadores:
+            self.logger.info("Nenhum jogador encontrado.")
+            return
+        for jogador in jogadores:
+            self.logger.info(f"  ID: {jogador[0]}, Nome: {jogador[2]}, Federação: {jogador[3]}, Data de Nascimento: {jogador[4]}, Sexo: {jogador[5]}, Rating ID: {jogador[1]}")
