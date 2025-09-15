@@ -34,7 +34,7 @@ O sistema é modelado com base nas seguintes entidades principais:
 
 O modelo do sistema foi estruturado conforme o diagrama abaixo:
 
-![Diagrama UML](./uml_torneio_v3.png)
+![Diagrama UML](./SwissChessSystemUML.drawio.svg)
 
 ## ⚙️ Tecnologias Utilizadas
 
